@@ -1,7 +1,7 @@
 const yomiDict = {};
 let problem = "";
 let problems = [];
-let answer = "Gopher";
+let answer = "布団が吹っ飛んだ";
 let correctCount = 0;
 let englishVoices = [];
 const voiceInput = setVoiceInput();
@@ -123,7 +123,7 @@ function speak(text) {
 }
 
 function respeak() {
-  speak(yomi);
+  speak(answer);
 }
 
 function getRandomInt(min, max) {
