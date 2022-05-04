@@ -1,4 +1,4 @@
-var CACHE_NAME = '2022-03-31 06:10';
+var CACHE_NAME = '2022-05-04 11:55';
 var urlsToCache = [
   "/dajare-ondoku/",
   "/dajare-ondoku/index.js",
@@ -8,7 +8,7 @@ var urlsToCache = [
   "/dajare-ondoku/mp3/end.mp3",
   "/dajare-ondoku/mp3/incorrect1.mp3",
   "/dajare-ondoku/mp3/correct3.mp3",
-  "/dajare-ondoku/favicon/original.svg",
+  "/dajare-ondoku/favicon/favicon.svg",
   "/dajare-ondoku/kohacu.webp",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
 ];
