@@ -194,7 +194,7 @@ function setVoiceInput() {
       const replyObj = document.getElementById("reply");
       if (
         isEquals(reply, answer, yomiDict) ||
-        isEquals(reply, answer.slice(0, -1))
+        isEquals(reply, answer.slice(0, -1), yomiDict)
       ) {
         correctCount += 1;
         playAudio(correctAudio);
