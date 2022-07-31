@@ -1,4 +1,4 @@
-var CACHE_NAME = "2022-07-28 07:20";
+var CACHE_NAME = "2022-08-01 00:05";
 var urlsToCache = [
   "/dajare-ondoku/",
   "/dajare-ondoku/index.js",

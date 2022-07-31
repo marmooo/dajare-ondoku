@@ -198,11 +198,11 @@ function setVoiceInput() {
       ) {
         correctCount += 1;
         playAudio(correctAudio);
-        replyObj.textContent = "○ " + answer;
+        replyObj.textContent = "⭕ " + answer;
         nextProblem();
       } else {
         playAudio(incorrectAudio);
-        replyObj.textContent = "× " + reply;
+        replyObj.textContent = "❌ " + reply;
       }
       voiceInput.stop();
     };
