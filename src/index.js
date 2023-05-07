@@ -237,7 +237,10 @@ const numbersToKanji = (num) => {
     return "";
   }
   if (!(/^-?[0-9]+$/g.test(num))) {
-    throw new TypeError("半角数字以外の文字が含まれています。漢数字に変換できませんでした。-> " + num);
+    throw new TypeError(
+      "半角数字以外の文字が含まれています。漢数字に変換できませんでした。-> " +
+        num,
+    );
   }
   num = Number(num);
   if (!Number.isSafeInteger(num)) {
