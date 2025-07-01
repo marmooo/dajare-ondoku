@@ -1,12 +1,15 @@
+const replyPlease = document.getElementById("replyPlease");
+const reply = document.getElementById("reply");
 const gameTime = 120;
 let yomiDict = new Map();
 let problem = "";
 let problems = [];
 let answer = "布団が吹っ飛んだ";
 let correctCount = 0;
-let audioContext;
-const audioBufferCache = {};
 let japaneseVoices = [];
+let audioContext;
+let voiceStopped = false;
+const audioBufferCache = {};
 loadVoices();
 const voiceInput = setVoiceInput();
 loadConfig();
@@ -155,7 +158,6 @@ function nextProblem() {
   answer = yomi;
   document.getElementById("problem").textContent = problem;
   document.getElementById("yomi").textContent = yomi;
-  document.getElementById("reply").textContent = "こたえてください";
   if (localStorage.getItem("voice") != 0) {
     speak(yomi);
   }
@@ -187,36 +189,54 @@ function setVoiceInput() {
     // voiceInput.interimResults = true;
     voiceInput.continuous = true;
 
-    voiceInput.onstart = () => {
-      const startButton = document.getElementById("startVoiceInput");
-      const stopButton = document.getElementById("stopVoiceInput");
-      startButton.classList.add("d-none");
-      stopButton.classList.remove("d-none");
-    };
     voiceInput.onend = () => {
-      if (!speechSynthesis.speaking) {
-        voiceInput.start();
-      }
+      if (voiceStopped) return;
+      voiceInput.start();
     };
     voiceInput.onresult = (event) => {
-      const reply = event.results[0][0].transcript;
-      const replyObj = document.getElementById("reply");
+      voiceInput.stop();
+      const replyText = event.results[0][0].transcript;
       if (
-        isEquals(reply, answer, yomiDict) ||
-        isEquals(reply, answer.slice(0, -1), yomiDict)
+        isEquals(replyText, answer, yomiDict) ||
+        isEquals(replyText, answer.slice(0, -1), yomiDict)
       ) {
         correctCount += 1;
         playAudio("correct");
-        replyObj.textContent = "⭕ " + answer;
+        reply.textContent = "⭕ " + answer;
         nextProblem();
+        replyPlease.classList.remove("d-none");
+        reply.classList.add("d-none");
       } else {
         playAudio("incorrect");
-        replyObj.textContent = "❌ " + reply;
+        reply.textContent = "❌ " + replyText;
+        replyPlease.classList.add("d-none");
+        reply.classList.remove("d-none");
       }
-      voiceInput.stop();
     };
     return voiceInput;
   }
+}
+
+function startVoiceInput() {
+  voiceStopped = false;
+  document.getElementById("startVoiceInput").classList.add("d-none");
+  document.getElementById("stopVoiceInput").classList.remove("d-none");
+  replyPlease.classList.remove("d-none");
+  reply.classList.add("d-none");
+  try {
+    voiceInput.start();
+  } catch {
+    // continue regardless of error
+  }
+}
+
+function stopVoiceInput() {
+  voiceStopped = true;
+  document.getElementById("startVoiceInput").classList.remove("d-none");
+  document.getElementById("stopVoiceInput").classList.add("d-none");
+  replyPlease.classList.remove("d-none");
+  reply.classList.add("d-none");
+  voiceInput.stop();
 }
 
 function initYomiDict() {
@@ -465,20 +485,6 @@ function hiraToKana(str) {
   });
 }
 
-function startVoiceInput() {
-  try {
-    voiceInput.start();
-  } catch {
-    // continue regardless of error
-  }
-}
-
-function stopVoiceInput() {
-  document.getElementById("startVoiceInput").classList.remove("d-none");
-  document.getElementById("stopVoiceInput").classList.add("d-none");
-  voiceInput.stop();
-}
-
 let gameTimer;
 function startGameTimer() {
   clearInterval(gameTimer);
@@ -491,11 +497,16 @@ function startGameTimer() {
     } else {
       clearInterval(gameTimer);
       playAudio("end");
-      playPanel.classList.add("d-none");
-      scorePanel.classList.remove("d-none");
-      document.getElementById("score").textContent = correctCount;
+      scoring();
+      stopVoiceInput();
     }
   }, 1000);
+}
+
+function scoring() {
+  playPanel.classList.add("d-none");
+  scorePanel.classList.remove("d-none");
+  document.getElementById("score").textContent = correctCount;
 }
 
 function initTime() {
@@ -522,6 +533,7 @@ function countdown() {
       document.getElementById("score").textContent = 0;
       startGameTimer();
       nextProblem();
+      startVoiceInput();
     }
   }, 1000);
 }
