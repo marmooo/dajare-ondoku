@@ -159,21 +159,19 @@ function nextProblem() {
   }
 }
 
-function initProblems() {
+async function initProblems() {
   const grade = document.getElementById("grade").selectedIndex;
-  fetch("data/" + grade + ".csv")
-    .then((response) => response.text())
-    .then((csv) => {
-      problems = [];
-      csv.split("\n").forEach((line) => {
-        if (line.startsWith("#")) return true;
-        // if (line.startsWith("#")) {
-        //   line = line.slice(2);
-        // }
-        const [sentence, yomi] = line.split(",");
-        problems.push([sentence, yomi]);
-      });
-    });
+  const response = await fetch("data/" + grade + ".csv");
+  const csv = await response.text();
+  problems = [];
+  csv.split("\n").forEach((line) => {
+    if (line.startsWith("#")) return true;
+    // if (line.startsWith("#")) {
+    //   line = line.slice(2);
+    // }
+    const [sentence, yomi] = line.split(",");
+    problems.push([sentence, yomi]);
+  });
 }
 
 function setVoiceInput() {
@@ -535,7 +533,7 @@ function countdown() {
   }, 1000);
 }
 
-initProblems();
+await initProblems();
 initYomiDict();
 
 document.getElementById("toggleDarkMode").onclick = toggleDarkMode;
