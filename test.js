@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert";
-import { TextLineStream } from "jsr:@std/streams/text-line-stream";
+import { TextLineStream } from "jsr:@std/streams";
 
 // https://jsr.io/@std/streams/doc/unstable-to-lines/~/toLines
 function toLines(readable, options) {
